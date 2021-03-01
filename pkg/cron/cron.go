@@ -3,7 +3,10 @@ package cron
 import (
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
+
+	"github.com/pkg/errors"
 )
 
 // CronValue provides minimal entity from cron object
@@ -11,10 +14,10 @@ import (
 type CronValue struct {
 	Name  string
 	Value string
-	Min   int
-	Max   int
+	Min   int64
+	Max   int64
 
-	parsedValues []int
+	parsedValues []int64
 }
 
 func (c CronValue) String() string {
@@ -23,33 +26,75 @@ func (c CronValue) String() string {
 	return fmt.Sprintf("%-14s %s", c.Name, values)
 }
 
-func (c *CronValue) validate() error {
-	return nil
-}
-
-func all(min, max int) []int {
+func all(min, max int64) []int64 {
 	if min > max {
-		return []int{}
+		return []int64{}
 	}
-	vals := make([]int, max-min+1)
+	vals := make([]int64, max-min+1)
 	for i := min; i <= max; i++ {
 		vals[i-min] = i
 	}
 	return vals
 }
 
-func (c *CronValue) parse() {
-	// timeSieve := make([]bool, c.Max-c.Min+1)
-	// times := make([]int, c.Max-c.Min+1)
+func parseRange(s string) (min int64, max int64, err error) {
+	rangeLimits := strings.Split(s, "-")
+	if len(rangeLimits) != 2 {
+		return 0, 0, fmt.Errorf("wrong amount of range parameters")
+	}
+	min, err = strconv.ParseInt(rangeLimits[0], 10, 64)
+	if err != nil {
+		return 0, 0, errors.Wrap(err, "parsing min range value")
+	}
+
+	max, err = strconv.ParseInt(rangeLimits[1], 10, 64)
+	if err != nil {
+		return 0, 0, errors.Wrap(err, "parsing max range value")
+	}
+	return
+}
+
+func intifyBoolSieve(offset int64, sieve []bool) []int64 {
+	vals := make([]int64, 0, len(sieve))
+
+	for i, v := range sieve {
+		if v {
+			vals = append(vals, int64(i)+offset)
+		}
+	}
+	return vals
+}
+
+func (c *CronValue) parse() error {
+	timeSieve := make([]bool, c.Max-c.Min+1)
 	for _, cronTimer := range strings.Split(c.Value, ",") {
 		switch {
 		case cronTimer == "*":
 			for i := c.Min; i <= c.Max; i++ {
 				c.parsedValues = all(c.Min, c.Max)
-				return
+				return nil
 			}
+		case strings.HasPrefix(cronTimer, "*/"):
+		case strings.Contains(cronTimer, "-"):
+			min, max, err := parseRange(cronTimer)
+			if err != nil {
+				return err
+			}
+			if min > max {
+				return fmt.Errorf("range in wrong order, is: %s, should be: %d-%d", c.Value, max, min)
+			}
+			if min < c.Min || max > c.Max {
+				return fmt.Errorf("range out of cron value range: name: %s, value: %s, range: %d-%d", c.Name, c.Value, c.Min, c.Max)
+			}
+			for i := min; i <= max; i++ {
+				timeSieve[i-c.Min] = true
+			}
+		default:
+
 		}
 	}
+	c.parsedValues = intifyBoolSieve(c.Min, timeSieve)
+	return nil
 }
 
 type Cron struct {

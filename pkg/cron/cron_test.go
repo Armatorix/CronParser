@@ -9,7 +9,7 @@ import (
 func TestAsteriskCron(t *testing.T) {
 	tests := []struct {
 		Value                CronValue
-		ExpectedParsedValues []int
+		ExpectedParsedValues []int64
 	}{
 		{
 			Value: CronValue{
@@ -18,7 +18,7 @@ func TestAsteriskCron(t *testing.T) {
 				Min:   10,
 				Max:   15,
 			},
-			ExpectedParsedValues: []int{10, 11, 12, 13, 14, 15},
+			ExpectedParsedValues: []int64{10, 11, 12, 13, 14, 15},
 		},
 		{
 			Value: CronValue{
@@ -27,7 +27,7 @@ func TestAsteriskCron(t *testing.T) {
 				Min:   0,
 				Max:   6,
 			},
-			ExpectedParsedValues: []int{0, 1, 2, 3, 4, 5, 6},
+			ExpectedParsedValues: []int64{0, 1, 2, 3, 4, 5, 6},
 		},
 		{
 			Value: CronValue{
@@ -36,7 +36,7 @@ func TestAsteriskCron(t *testing.T) {
 				Min:   0,
 				Max:   6,
 			},
-			ExpectedParsedValues: []int{0, 1, 2, 3, 4, 5, 6},
+			ExpectedParsedValues: []int64{0, 1, 2, 3, 4, 5, 6},
 		},
 	}
 	for _, test := range tests {
@@ -48,7 +48,7 @@ func TestAsteriskCron(t *testing.T) {
 func TestStepCron(t *testing.T) {
 	tests := []struct {
 		Value                CronValue
-		ExpectedParsedValues []int
+		ExpectedParsedValues []int64
 	}{
 		{
 			Value: CronValue{
@@ -57,7 +57,7 @@ func TestStepCron(t *testing.T) {
 				Min:   0,
 				Max:   7,
 			},
-			ExpectedParsedValues: []int{0, 2, 4, 6},
+			ExpectedParsedValues: []int64{0, 2, 4, 6},
 		},
 		{
 			Value: CronValue{
@@ -66,7 +66,7 @@ func TestStepCron(t *testing.T) {
 				Min:   0,
 				Max:   7,
 			},
-			ExpectedParsedValues: []int{0, 3, 6},
+			ExpectedParsedValues: []int64{0, 3, 6},
 		},
 		{
 			Value: CronValue{
@@ -75,7 +75,7 @@ func TestStepCron(t *testing.T) {
 				Min:   0,
 				Max:   7,
 			},
-			ExpectedParsedValues: []int{0, 6},
+			ExpectedParsedValues: []int64{0, 6},
 		},
 	}
 	for _, test := range tests {
@@ -87,7 +87,7 @@ func TestStepCron(t *testing.T) {
 func TestRangeCron(t *testing.T) {
 	tests := []struct {
 		Value                CronValue
-		ExpectedParsedValues []int
+		ExpectedParsedValues []int64
 	}{
 		{
 			Value: CronValue{
@@ -96,7 +96,7 @@ func TestRangeCron(t *testing.T) {
 				Min:   1,
 				Max:   31,
 			},
-			ExpectedParsedValues: []int{10, 11, 12, 13, 14, 15},
+			ExpectedParsedValues: []int64{10, 11, 12, 13, 14, 15},
 		},
 		{
 			Value: CronValue{
@@ -105,7 +105,7 @@ func TestRangeCron(t *testing.T) {
 				Min:   0,
 				Max:   6,
 			},
-			ExpectedParsedValues: []int{0, 1, 2, 3, 4, 5, 6},
+			ExpectedParsedValues: []int64{0, 1, 2, 3, 4, 5, 6},
 		},
 		{
 			Value: CronValue{
@@ -114,7 +114,7 @@ func TestRangeCron(t *testing.T) {
 				Min:   0,
 				Max:   30,
 			},
-			ExpectedParsedValues: []int{3, 4, 5, 6, 7, 8},
+			ExpectedParsedValues: []int64{3, 4, 5, 6, 7, 8},
 		},
 		{
 			Value: CronValue{
@@ -123,7 +123,7 @@ func TestRangeCron(t *testing.T) {
 				Min:   0,
 				Max:   30,
 			},
-			ExpectedParsedValues: []int{3, 4, 5, 6, 7},
+			ExpectedParsedValues: []int64{3, 4, 5, 6, 7},
 		},
 	}
 	for _, test := range tests {
@@ -135,7 +135,7 @@ func TestRangeCron(t *testing.T) {
 func TestSingleValueCron(t *testing.T) {
 	tests := []struct {
 		Value                CronValue
-		ExpectedParsedValues []int
+		ExpectedParsedValues []int64
 	}{
 		{
 			Value: CronValue{
@@ -144,7 +144,7 @@ func TestSingleValueCron(t *testing.T) {
 				Min:   1,
 				Max:   31,
 			},
-			ExpectedParsedValues: []int{5},
+			ExpectedParsedValues: []int64{5},
 		},
 		{
 			Value: CronValue{
@@ -153,7 +153,7 @@ func TestSingleValueCron(t *testing.T) {
 				Min:   1,
 				Max:   31,
 			},
-			ExpectedParsedValues: []int{2, 5, 6, 7, 8},
+			ExpectedParsedValues: []int64{2, 5, 6, 7, 8},
 		},
 	}
 	for _, test := range tests {
@@ -165,7 +165,7 @@ func TestSingleValueCron(t *testing.T) {
 func TestMixedCronTypes(t *testing.T) {
 	tests := []struct {
 		Value                CronValue
-		ExpectedParsedValues []int
+		ExpectedParsedValues []int64
 	}{
 		{
 			Value: CronValue{
@@ -174,7 +174,7 @@ func TestMixedCronTypes(t *testing.T) {
 				Min:   1,
 				Max:   31,
 			},
-			ExpectedParsedValues: []int{5, 6, 7, 8},
+			ExpectedParsedValues: []int64{5, 6, 7, 8},
 		},
 		{
 			Value: CronValue{
@@ -183,7 +183,7 @@ func TestMixedCronTypes(t *testing.T) {
 				Min:   1,
 				Max:   31,
 			},
-			ExpectedParsedValues: []int{6, 7, 8, 9, 10},
+			ExpectedParsedValues: []int64{6, 7, 8, 9, 10},
 		},
 		{
 			Value: CronValue{
@@ -192,7 +192,7 @@ func TestMixedCronTypes(t *testing.T) {
 				Min:   0,
 				Max:   6,
 			},
-			ExpectedParsedValues: []int{0, 1, 2, 3, 4, 5},
+			ExpectedParsedValues: []int64{0, 1, 2, 3, 4, 5},
 		},
 	}
 	for _, test := range tests {
