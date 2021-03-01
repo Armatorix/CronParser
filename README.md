@@ -4,8 +4,14 @@
 
 * [go1.16](https://golang.org/doc/install)
 
+## Installation
+
+``` bash
+go get -u github.com/Armatorix/CronParser/cmd/cronparser
+```
+
 ## Example run
 
 ``` bash
-go run cmd/cronparser/main.go "* * * * * /usr/bin/time"
+cronparser cmd/cronparser/main.go "* * * * * /usr/bin/time"
 ```
