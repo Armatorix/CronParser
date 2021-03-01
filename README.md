@@ -2,7 +2,7 @@
 
 ## Requirements
 
-* go1.16
+* [go1.16](https://golang.org/doc/install)
 
 ## Example run
 
