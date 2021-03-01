@@ -15,3 +15,8 @@ go get -u github.com/Armatorix/CronParser/cmd/cronparser
 ``` bash
 cronparser "* * * * * /usr/bin/time"
 ```
+
+## TODO
+
+* tests for inapropreate execution
+* handling for step asterisk
