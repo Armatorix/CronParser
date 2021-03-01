@@ -45,6 +45,45 @@ func TestAsteriskCron(t *testing.T) {
 	}
 }
 
+func TestStepCron(t *testing.T) {
+	tests := []struct {
+		Value                CronValue
+		ExpectedParsedValues []int
+	}{
+		{
+			Value: CronValue{
+				Name:  "Test asterisk with step",
+				Value: "*/2",
+				Min:   0,
+				Max:   7,
+			},
+			ExpectedParsedValues: []int{0, 2, 4, 6},
+		},
+		{
+			Value: CronValue{
+				Name:  "Test asterisk with step",
+				Value: "*/3",
+				Min:   0,
+				Max:   7,
+			},
+			ExpectedParsedValues: []int{0, 3, 6},
+		},
+		{
+			Value: CronValue{
+				Name:  "Test asterisk with step",
+				Value: "*/6",
+				Min:   0,
+				Max:   7,
+			},
+			ExpectedParsedValues: []int{0, 6},
+		},
+	}
+	for _, test := range tests {
+		test.Value.parse()
+		require.Equal(t, test.ExpectedParsedValues, test.Value.parsedValues, test)
+	}
+}
+
 func TestRangeCron(t *testing.T) {
 	tests := []struct {
 		Value                CronValue
