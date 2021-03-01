@@ -13,5 +13,5 @@ go get -u github.com/Armatorix/CronParser/cmd/cronparser
 ## Example run
 
 ``` bash
-cronparser cmd/cronparser/main.go "* * * * * /usr/bin/time"
+cronparser "* * * * * /usr/bin/time"
 ```
