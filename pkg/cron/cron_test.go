@@ -40,7 +40,7 @@ func TestAsteriskCron(t *testing.T) {
 		},
 	}
 	for _, test := range tests {
-		test.Value.parse()
+		require.NoError(t, test.Value.parse())
 		require.Equal(t, test.ExpectedParsedValues, test.Value.parsedValues, test)
 	}
 }
@@ -79,7 +79,7 @@ func TestStepCron(t *testing.T) {
 		},
 	}
 	for _, test := range tests {
-		test.Value.parse()
+		require.NoError(t, test.Value.parse())
 		require.Equal(t, test.ExpectedParsedValues, test.Value.parsedValues, test)
 	}
 }
@@ -127,7 +127,7 @@ func TestRangeCron(t *testing.T) {
 		},
 	}
 	for _, test := range tests {
-		test.Value.parse()
+		require.NoError(t, test.Value.parse())
 		require.Equal(t, test.ExpectedParsedValues, test.Value.parsedValues, test)
 	}
 }
@@ -157,7 +157,7 @@ func TestSingleValueCron(t *testing.T) {
 		},
 	}
 	for _, test := range tests {
-		test.Value.parse()
+		require.NoError(t, test.Value.parse())
 		require.Equal(t, test.ExpectedParsedValues, test.Value.parsedValues, test)
 	}
 }
@@ -192,11 +192,11 @@ func TestMixedCronTypes(t *testing.T) {
 				Min:   0,
 				Max:   6,
 			},
-			ExpectedParsedValues: []int64{0, 1, 2, 3, 4, 5},
+			ExpectedParsedValues: []int64{0, 1, 2, 3, 4, 5, 6},
 		},
 	}
 	for _, test := range tests {
-		test.Value.parse()
+		require.NoError(t, test.Value.parse())
 		require.Equal(t, test.ExpectedParsedValues, test.Value.parsedValues, test)
 	}
 }

@@ -90,6 +90,14 @@ func (c *CronValue) parse() error {
 				timeSieve[i-c.Min] = true
 			}
 		default:
+			v, err := strconv.ParseInt(cronTimer, 10, 64)
+			if err != nil {
+				return errors.Wrap(err, "single value pare failed")
+			}
+			if v < c.Min || v > c.Max {
+				return fmt.Errorf("value out of cron value range: name: %s, value: %s, range: %d-%d", c.Name, c.Value, c.Min, c.Max)
+			}
+			timeSieve[v-c.Min] = true
 
 		}
 	}
