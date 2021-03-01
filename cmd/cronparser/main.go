@@ -7,5 +7,9 @@ import (
 )
 
 func main() {
-	fmt.Println(cron.NewFromOsArgs())
+	cron, err := cron.NewFromOsArgs()
+	if err != nil {
+		fmt.Println("Execution failed: ", err)
+	}
+	fmt.Println(cron)
 }
