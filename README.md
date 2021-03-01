@@ -20,3 +20,4 @@ cronparser "* * * * * /usr/bin/time"
 
 * tests for inapropreate execution
 * handling for step asterisk
+* move parsing/transformation functions to utility package
