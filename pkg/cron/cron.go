@@ -106,12 +106,21 @@ type Cron struct {
 	Command    string
 }
 
-func (c *Cron) parse() {
-	c.Minute.parse()
-	c.Hour.parse()
-	c.DayOfMonth.parse()
-	c.Month.parse()
-	c.DayOfWeek.parse()
+// For now return first occured error, can be extended to show all of them
+func (c *Cron) parse() error {
+	errors := []error{
+		c.Minute.parse(),
+		c.Hour.parse(),
+		c.DayOfMonth.parse(),
+		c.Month.parse(),
+		c.DayOfWeek.parse(),
+	}
+	for _, err := range errors {
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func (c Cron) String() string {
@@ -161,6 +170,9 @@ func NewFromOsArgs() (*Cron, error) {
 		},
 		Command: args[5],
 	}
-	c.parse()
+	err := c.parse()
+	if err != nil {
+		return nil, err
+	}
 	return c, nil
 }
