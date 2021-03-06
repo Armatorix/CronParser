@@ -15,7 +15,7 @@ func TestNewFromOsArgsCornerCases(t *testing.T) {
 	}{
 		{
 			name:         "no arguments",
-			errSubstring: "incorrect number of command line arguments",
+			errSubstring: "incorrect number of command line argument",
 			osArgs:       []string{"cmdName"},
 		},
 		{

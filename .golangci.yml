@@ -1,0 +1,70 @@
+issues:
+  # List all of them
+  max-issues-per-linter: 0
+  max-same-issues: 0
+
+issues:
+  exclude-rules:
+    - text: "Function 'Test"
+      linters: 
+        - funlen
+    - path: pkg/cron/cron_test.go
+      linters:
+        - lll
+    - text: "type name will be used as cron.CronValue"
+      path: pkg/cron/cronvalue.go
+      linters: 
+        - golint
+    - text: "mnd: Magic number:"
+      path: pkg/cron/cron.go
+      linters:
+        - gomnd
+    - text: "mnd: Magic number:"
+      path: pkg/cron/parser/parser.go
+      linters:
+        - gomnd
+run:
+  skip-dirs:
+    - pkg/model
+linters:
+  enable:
+    - bodyclose
+    - noctx
+    - golint
+    - rowserrcheck
+    - stylecheck
+    - gosec
+    - interfacer
+    - unconvert
+    - dupl
+    - goconst
+    - gocyclo
+    - gocognit
+    - asciicheck
+    - gofmt
+    - goimports
+    - goheader
+    - gci
+    - maligned
+    - depguard
+    - misspell
+    - lll
+    - unparam
+    - dogsled
+    - nakedret
+    - prealloc
+    - scopelint
+    - gocritic
+    - godox
+    - funlen
+    - whitespace
+    - goprintffuncname
+    - gomnd
+    - goerr113
+    - gomodguard
+    - godot
+    - nestif
+    - exportloopref
+    - exhaustive
+    - sqlclosecheck
+    - nolintlint

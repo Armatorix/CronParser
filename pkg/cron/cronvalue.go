@@ -6,12 +6,12 @@ import (
 	"strings"
 
 	"github.com/Armatorix/CronParser/pkg/cron/parser"
-	"github.com/Armatorix/CronParser/pkg/existancemap"
+	"github.com/Armatorix/CronParser/pkg/existencemap"
 	"github.com/pkg/errors"
 )
 
 // CronValue provides minimal entity from cron object
-// it handles minute, hour, day, month day of month
+// it handles minute, hour, day, month day of month.
 type CronValue struct {
 	name  string
 	value string
@@ -28,7 +28,7 @@ func (c CronValue) String() string {
 }
 
 func (c *CronValue) parse() error {
-	existance, err := existancemap.New(c.min, c.max)
+	existence, err := existencemap.New(c.min, c.max)
 	if err != nil {
 		return err
 	}
@@ -36,8 +36,8 @@ func (c *CronValue) parse() error {
 		switch {
 		case cronTimer == "*":
 			for i := c.min; i <= c.max; i++ {
-				existance.AllExists()
-				c.parsedValues = existance.ToInt64Slice()
+				existence.AllExists()
+				c.parsedValues = existence.ToInt64Slice()
 				return nil
 			}
 		case strings.HasPrefix(cronTimer, "*/"):
@@ -45,7 +45,7 @@ func (c *CronValue) parse() error {
 			if err != nil {
 				return err
 			}
-			if err = existance.ApplySlice(vals); err != nil {
+			if err = existence.ApplySlice(vals); err != nil {
 				return err
 			}
 
@@ -55,7 +55,7 @@ func (c *CronValue) parse() error {
 				return err
 			}
 
-			if err = existance.ApplyRange(min, max); err != nil {
+			if err = existence.ApplyRange(min, max); err != nil {
 				return err
 			}
 		default:
@@ -64,11 +64,11 @@ func (c *CronValue) parse() error {
 				return errors.Wrap(err, "single value parse failed")
 			}
 
-			if err = existance.ApplyNumber(v); err != nil {
+			if err = existence.ApplyNumber(v); err != nil {
 				return err
 			}
 		}
 	}
-	c.parsedValues = existance.ToInt64Slice()
+	c.parsedValues = existence.ToInt64Slice()
 	return nil
 }

@@ -15,7 +15,7 @@ var (
 
 // ParseRange parses string from format "${min}-${max}" as min, max values
 // where min, max are integers
-// return error in case of wrong format or when min>max
+// return error in case of wrong format or when min>max.
 func ParseRange(s string) (min int64, max int64, err error) {
 	rangeLimits := strings.Split(s, "-")
 	if len(rangeLimits) != 2 {
@@ -40,7 +40,7 @@ func ParseRange(s string) (min int64, max int64, err error) {
 // ParseStep returnes values for min-max range
 // with step parsed from s in format "*/${step}"
 // where step is an integer
-// return error in case of wrong format or step bigger than range
+// return error in case of wrong format or step bigger than range.
 func ParseStep(s string, min, max int64) ([]int64, error) {
 	if !strings.HasPrefix(s, "*/") {
 		return nil, errWrongFormat

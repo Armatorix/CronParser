@@ -1,4 +1,4 @@
-package existancemap
+package existencemap
 
 import (
 	"testing"
@@ -50,7 +50,7 @@ func TestNew(t *testing.T) {
 		if test.err == nil {
 			require.Equal(t, test.min, ex.min)
 			require.Equal(t, test.max, ex.max)
-			require.Equal(t, test.sliceLen, len(ex.existance))
+			require.Equal(t, test.sliceLen, len(ex.existence))
 			require.Equal(t, test.min, ex.min)
 		}
 	}

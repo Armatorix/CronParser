@@ -7,6 +7,7 @@
 ## Requirements
 
 - [go1.16](https://golang.org/doc/install)
+- [make](https://man7.org/linux/man-pages/man1/make.1.html)
 
 ## Installation
 
@@ -15,6 +16,18 @@ go get -u github.com/Armatorix/CronParser/cmd/cronparser
 ```
 
 **REMAMBER** to add the $GOPATH/bin to the $PATH environment variable
+
+## Build from sources
+
+```bash
+make build
+```
+
+## Test
+
+```bash
+make test
+```
 
 ## Example run
 

@@ -8,6 +8,11 @@ import (
 	"github.com/pkg/errors"
 )
 
+var (
+	errIncorrectCmdArgsLen    = errors.New("incorrect number of command line argument")
+	errIncorrectCmdCronArgLen = errors.New("incorrect number of cron arguments")
+)
+
 type Cron struct {
 	Minute     CronValue
 	Hour       CronValue
@@ -17,7 +22,7 @@ type Cron struct {
 	Command    string
 }
 
-// For now return first occured error, can be extended to show all of them
+// For now return first occurred error, can be extended to show all of them.
 func (c *Cron) parse() error {
 	cronEntities := []*CronValue{
 		&c.Minute,
@@ -35,17 +40,18 @@ func (c *Cron) parse() error {
 }
 
 func (c Cron) String() string {
-	return fmt.Sprintf("%s\n%s\n%s\n%s\n%s\n%-14s %s\n", c.Minute, c.Hour, c.DayOfMonth, c.Month, c.DayOfWeek, "command", c.Command)
+	return fmt.Sprintf("%s\n%s\n%s\n%s\n%s\n%-14s %s\n",
+		c.Minute, c.Hour, c.DayOfMonth, c.Month, c.DayOfWeek, "command", c.Command)
 }
 
 func NewFromOsArgs() (*Cron, error) {
 	osArgs := os.Args
 	if len(osArgs) != 2 {
-		return nil, fmt.Errorf("incorrect number of command line arguments: %d", len(osArgs))
+		return nil, errors.WithMessagef(errIncorrectCmdArgsLen, "length: %d", len(osArgs))
 	}
 	args := strings.Split(osArgs[1], " ")
 	if len(args) != 6 {
-		return nil, fmt.Errorf("incorrect number of cron arguments: %d", len(args))
+		return nil, errors.WithMessagef(errIncorrectCmdCronArgLen, "length: %d", len(args))
 	}
 
 	c := &Cron{

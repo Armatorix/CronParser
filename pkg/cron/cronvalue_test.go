@@ -71,7 +71,6 @@ func TestCornerCases(t *testing.T) {
 	for _, test := range tests {
 		require.Error(t, test.cronValue.parse())
 	}
-
 }
 func TestAsteriskCron(t *testing.T) {
 	tests := []struct {
