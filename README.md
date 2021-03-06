@@ -17,7 +17,14 @@ go get -u github.com/Armatorix/CronParser/cmd/cronparser
 ## Example run
 
 ```bash
-cronparser "* * * * * /usr/bin/time"
+$ cronparser "37 21 */2 3-7,10-12 */2,3 /usr/bin/time"
+minute         37
+hour           21
+day of month   1 3 5 7 9 11 13 15 17 19 21 23 25 27 29 31
+month          3 4 5 6 7 10 11 12
+day of week    0 2 3 4 6
+command        /usr/bin/time
+
 ```
 
 ## TODO
