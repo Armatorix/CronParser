@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/Armatorix/CronParser/pkg/cron/parser"
+	"github.com/Armatorix/CronParser/pkg/existancemap"
 	"github.com/pkg/errors"
 )
 
@@ -27,65 +28,49 @@ func (c CronValue) String() string {
 	return fmt.Sprintf("%-14s %s", c.Name, values)
 }
 
-func all(min, max int64) []int64 {
-	if min > max {
-		return []int64{}
-	}
-	vals := make([]int64, max-min+1)
-	for i := min; i <= max; i++ {
-		vals[i-min] = i
-	}
-	return vals
-}
-
-func boolMapToIntSlice(offset int64, sieve []bool) []int64 {
-	vals := make([]int64, 0, len(sieve))
-
-	for i, v := range sieve {
-		if v {
-			vals = append(vals, int64(i)+offset)
-		}
-	}
-	return vals
-}
-
 func (c *CronValue) parse() error {
-	timeSieve := make([]bool, c.Max-c.Min+1)
+	existance, err := existancemap.New(c.Min, c.Max)
+	if err != nil {
+		return err
+	}
 	for _, cronTimer := range strings.Split(c.Value, ",") {
 		switch {
 		case cronTimer == "*":
 			for i := c.Min; i <= c.Max; i++ {
-				c.parsedValues = all(c.Min, c.Max)
+				existance.AllExists()
+				c.parsedValues = existance.ToInt64Slice()
 				return nil
 			}
 		case strings.HasPrefix(cronTimer, "*/"):
+			vals, err := parser.ParseStep(cronTimer, c.Min, c.Max)
+			if err != nil {
+				return err
+			}
+			if err = existance.ApplySlice(vals); err != nil {
+				return err
+			}
+
 		case strings.Contains(cronTimer, "-"):
 			min, max, err := parser.ParseRange(cronTimer)
 			if err != nil {
 				return err
 			}
-			if min > max {
-				return fmt.Errorf("range in wrong order, is: %s, should be: %d-%d", c.Value, max, min)
-			}
-			if min < c.Min || max > c.Max {
-				return fmt.Errorf("name: %s, value: %s, range: %d-%d", c.Name, c.Value, c.Min, c.Max)
-			}
-			for i := min; i <= max; i++ {
-				timeSieve[i-c.Min] = true
+
+			if err = existance.ApplyRange(min, max); err != nil {
+				return err
 			}
 		default:
 			v, err := strconv.ParseInt(cronTimer, 10, 64)
 			if err != nil {
-				return errors.Wrap(err, "single value pare failed")
+				return errors.Wrap(err, "single value parse failed")
 			}
-			if v < c.Min || v > c.Max {
-				return fmt.Errorf("value out of cron value range: name: %s, value: %s, range: %d-%d", c.Name, c.Value, c.Min, c.Max)
-			}
-			timeSieve[v-c.Min] = true
 
+			if err = existance.ApplyNumber(v); err != nil {
+				return err
+			}
 		}
 	}
-	c.parsedValues = boolMapToIntSlice(c.Min, timeSieve)
+	c.parsedValues = existance.ToInt64Slice()
 	return nil
 }
 
@@ -100,16 +85,16 @@ type Cron struct {
 
 // For now return first occured error, can be extended to show all of them
 func (c *Cron) parse() error {
-	errors := []error{
-		c.Minute.parse(),
-		c.Hour.parse(),
-		c.DayOfMonth.parse(),
-		c.Month.parse(),
-		c.DayOfWeek.parse(),
+	cronEntities := []CronValue{
+		c.Minute,
+		c.Hour,
+		c.DayOfMonth,
+		c.Month,
+		c.DayOfWeek,
 	}
-	for _, err := range errors {
-		if err != nil {
-			return err
+	for _, cronEntity := range cronEntities {
+		if err := cronEntity.parse(); err != nil {
+			return errors.WithMessagef(err, "%s parsing failed", cronEntity.Name)
 		}
 	}
 	return nil
