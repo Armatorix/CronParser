@@ -102,3 +102,45 @@ func TestApplyNumber(t *testing.T) {
 		}
 	}
 }
+
+func TestApplySlice(t *testing.T) {
+	min, max := int64(10), int64(20)
+	tests := []struct {
+		name    string
+		numbers []int64
+		err     error
+	}{
+		{
+			name:    "values from range",
+			numbers: []int64{10, 11, 12, 15, 17, 20},
+			err:     nil,
+		},
+		{
+			name:    "all values",
+			numbers: []int64{10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20},
+			err:     nil,
+		},
+		{
+			name:    "values out of range",
+			numbers: []int64{-10, 0, 9, 21, 37},
+			err:     errOutOfBound,
+		},
+		{
+			name:    "mixed from and out of range",
+			numbers: []int64{0, 10, 20, 30},
+			err:     errOutOfBound,
+		},
+	}
+
+	for _, test := range tests {
+		ex, err := New(min, max)
+		require.NoError(t, err)
+		err = ex.ApplySlice(test.numbers)
+		if test.err == nil {
+			require.NoError(t, err)
+			require.Equal(t, test.numbers, ex.ToInt64Slice())
+		} else {
+			require.ErrorIs(t, err, test.err)
+		}
+	}
+}
