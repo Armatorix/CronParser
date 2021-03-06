@@ -32,7 +32,7 @@ func TestAsteriskCron(t *testing.T) {
 		{
 			Value: CronValue{
 				Name:  "Test mixed asterisk",
-				Value: "21,*,37,12-15",
+				Value: "1,*,5,2-4",
 				Min:   0,
 				Max:   6,
 			},

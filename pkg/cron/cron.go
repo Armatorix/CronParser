@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/Armatorix/CronParser/pkg/cron/parser"
 	"github.com/pkg/errors"
 )
 
@@ -37,24 +38,7 @@ func all(min, max int64) []int64 {
 	return vals
 }
 
-func parseRange(s string) (min int64, max int64, err error) {
-	rangeLimits := strings.Split(s, "-")
-	if len(rangeLimits) != 2 {
-		return 0, 0, fmt.Errorf("wrong amount of range parameters")
-	}
-	min, err = strconv.ParseInt(rangeLimits[0], 10, 64)
-	if err != nil {
-		return 0, 0, errors.Wrap(err, "parsing min range value")
-	}
-
-	max, err = strconv.ParseInt(rangeLimits[1], 10, 64)
-	if err != nil {
-		return 0, 0, errors.Wrap(err, "parsing max range value")
-	}
-	return
-}
-
-func intifyBoolSieve(offset int64, sieve []bool) []int64 {
+func boolMapToIntSlice(offset int64, sieve []bool) []int64 {
 	vals := make([]int64, 0, len(sieve))
 
 	for i, v := range sieve {
@@ -76,7 +60,7 @@ func (c *CronValue) parse() error {
 			}
 		case strings.HasPrefix(cronTimer, "*/"):
 		case strings.Contains(cronTimer, "-"):
-			min, max, err := parseRange(cronTimer)
+			min, max, err := parser.ParseRange(cronTimer)
 			if err != nil {
 				return err
 			}
@@ -84,7 +68,7 @@ func (c *CronValue) parse() error {
 				return fmt.Errorf("range in wrong order, is: %s, should be: %d-%d", c.Value, max, min)
 			}
 			if min < c.Min || max > c.Max {
-				return fmt.Errorf("range out of cron value range: name: %s, value: %s, range: %d-%d", c.Name, c.Value, c.Min, c.Max)
+				return fmt.Errorf("name: %s, value: %s, range: %d-%d", c.Name, c.Value, c.Min, c.Max)
 			}
 			for i := min; i <= max; i++ {
 				timeSieve[i-c.Min] = true
@@ -101,7 +85,7 @@ func (c *CronValue) parse() error {
 
 		}
 	}
-	c.parsedValues = intifyBoolSieve(c.Min, timeSieve)
+	c.parsedValues = boolMapToIntSlice(c.Min, timeSieve)
 	return nil
 }
 
