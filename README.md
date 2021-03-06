@@ -14,6 +14,8 @@
 go get -u github.com/Armatorix/CronParser/cmd/cronparser
 ```
 
+**REMAMBER** to add the $GOPATH/bin to the $PATH environment variable
+
 ## Example run
 
 ```bash
