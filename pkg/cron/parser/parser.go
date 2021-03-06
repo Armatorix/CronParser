@@ -45,6 +45,9 @@ func ParseStep(s string, min, max int64) ([]int64, error) {
 	if !strings.HasPrefix(s, "*/") {
 		return nil, errWrongFormat
 	}
+	if len(s) == 2 {
+		return nil, errors.WithMessage(errWrongFormat, "missing step")
+	}
 	step, err := strconv.ParseInt(s[2:], 10, 64)
 	if err != nil {
 		return nil, errors.WithMessage(err, "parse step value")
