@@ -207,3 +207,12 @@ func TestRangeApply(t *testing.T) {
 		require.Equal(t, test.expected, ex.ToInt64Slice())
 	}
 }
+
+func TestAllExists(t *testing.T) {
+	min, max := int64(2), int64(4)
+
+	ex, err := New(min, max)
+	require.NoError(t, err)
+	ex.AllExists()
+	require.Equal(t, []int64{2, 3, 4}, ex.ToInt64Slice())
+}
