@@ -85,12 +85,12 @@ type Cron struct {
 
 // For now return first occured error, can be extended to show all of them
 func (c *Cron) parse() error {
-	cronEntities := []CronValue{
-		c.Minute,
-		c.Hour,
-		c.DayOfMonth,
-		c.Month,
-		c.DayOfWeek,
+	cronEntities := []*CronValue{
+		&c.Minute,
+		&c.Hour,
+		&c.DayOfMonth,
+		&c.Month,
+		&c.DayOfWeek,
 	}
 	for _, cronEntity := range cronEntities {
 		if err := cronEntity.parse(); err != nil {
