@@ -144,3 +144,66 @@ func TestApplySlice(t *testing.T) {
 		}
 	}
 }
+
+func TestRangeApply(t *testing.T) {
+	min, max := int64(10), int64(20)
+	tests := []struct {
+		name     string
+		min      int64
+		max      int64
+		err      error
+		expected []int64
+	}{
+		{
+			name:     "from min",
+			min:      min,
+			max:      min + 5,
+			err:      nil,
+			expected: []int64{10, 11, 12, 13, 14, 15},
+		},
+		{
+			name:     "up to max",
+			min:      max - 3,
+			max:      max,
+			err:      nil,
+			expected: []int64{17, 18, 19, 20},
+		},
+		{
+			name:     "all values",
+			min:      10,
+			max:      20,
+			expected: []int64{10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20},
+			err:      nil,
+		},
+		{
+			name:     "exceeded min by 1",
+			min:      min - 1,
+			max:      max,
+			expected: []int64{},
+			err:      errOutOfBound,
+		},
+
+		{
+			name:     "exceeded max by 1",
+			min:      min,
+			max:      max + 1,
+			expected: []int64{},
+			err:      errOutOfBound,
+		},
+		{
+			name:     "single value within range",
+			min:      14,
+			max:      14,
+			expected: []int64{14},
+			err:      nil,
+		},
+	}
+
+	for _, test := range tests {
+		ex, err := New(min, max)
+		require.NoError(t, err)
+		err = ex.ApplyRange(test.min, test.max)
+		require.ErrorIs(t, err, test.err)
+		require.Equal(t, test.expected, ex.ToInt64Slice())
+	}
+}
