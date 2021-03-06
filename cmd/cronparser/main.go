@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/Armatorix/CronParser/pkg/cron"
 )
@@ -9,7 +10,8 @@ import (
 func main() {
 	cron, err := cron.NewFromOsArgs()
 	if err != nil {
-		fmt.Println("Execution failed: ", err)
+		fmt.Fprintln(os.Stderr, "Execution failed: ", err)
+		os.Exit(-1)
 	}
 	fmt.Println(cron)
 }
