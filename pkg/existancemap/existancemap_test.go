@@ -55,3 +55,50 @@ func TestNew(t *testing.T) {
 		}
 	}
 }
+
+func TestApplyNumber(t *testing.T) {
+	min, max := int64(10), int64(20)
+	tests := []struct {
+		name    string
+		numbers []int64
+		err     error
+	}{
+		{
+			name:    "min edge",
+			numbers: []int64{min},
+			err:     nil,
+		},
+		{
+			name:    "max edge",
+			numbers: []int64{max},
+			err:     nil,
+		},
+		{
+			name:    "values from range",
+			numbers: []int64{10, 20},
+			err:     nil,
+		},
+		{
+			name:    "values out of range",
+			numbers: []int64{-10, 0, 9, 21, 37},
+			err:     errOutOfBound,
+		},
+	}
+
+	for _, test := range tests {
+		ex, err := New(min, max)
+		require.NoError(t, err)
+		if test.err == nil {
+			for i, v := range test.numbers {
+				err = ex.ApplyNumber(v)
+				require.NoError(t, err)
+				require.Equal(t, test.numbers[:i+1], ex.ToInt64Slice())
+			}
+		} else {
+			for _, v := range test.numbers {
+				err = ex.ApplyNumber(v)
+				require.ErrorIs(t, err, test.err)
+			}
+		}
+	}
+}
