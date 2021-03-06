@@ -6,6 +6,73 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+func TestCornerCases(t *testing.T) {
+	tests := []struct {
+		name      string
+		cronValue CronValue
+	}{
+		{
+			name: "test incorrect range",
+			cronValue: CronValue{
+				name:  "test",
+				value: "*",
+				min:   15,
+				max:   10,
+			},
+		},
+		{
+			name: "test incorrect step case",
+			cronValue: CronValue{
+				name:  "test",
+				value: "*/",
+				min:   10,
+				max:   15,
+			},
+		},
+
+		{
+			name: "test incorrect range case",
+			cronValue: CronValue{
+				name:  "test",
+				value: "te-st",
+				min:   10,
+				max:   15,
+			},
+		},
+		{
+			name: "test renge out of boundries",
+			cronValue: CronValue{
+				name:  "test",
+				value: "5-15",
+				min:   10,
+				max:   15,
+			},
+		},
+		{
+			name: "test bad value",
+			cronValue: CronValue{
+				name:  "test",
+				value: "tst12",
+				min:   10,
+				max:   15,
+			},
+		},
+
+		{
+			name: "test value out of range",
+			cronValue: CronValue{
+				name:  "test",
+				value: "20",
+				min:   10,
+				max:   15,
+			},
+		},
+	}
+	for _, test := range tests {
+		require.Error(t, test.cronValue.parse())
+	}
+
+}
 func TestAsteriskCron(t *testing.T) {
 	tests := []struct {
 		name           string
