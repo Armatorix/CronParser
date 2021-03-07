@@ -41,9 +41,3 @@ day of week    0 2 3 4 6
 command        /usr/bin/time
 
 ```
-
-## TODO
-
-- tests for inapropreate execution
-- handling for step asterisk
-- move parsing/transformation functions to utility package
