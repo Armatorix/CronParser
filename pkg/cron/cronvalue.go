@@ -7,7 +7,6 @@ import (
 
 	"github.com/Armatorix/CronParser/pkg/cron/parser"
 	"github.com/Armatorix/CronParser/pkg/existencemap"
-	"github.com/pkg/errors"
 )
 
 // CronValue provides minimal entity from cron object
@@ -19,6 +18,21 @@ type CronValue struct {
 	max   int64
 
 	parsedValues []int64
+}
+
+func NewCronValue(name, value string, min, max int64) (*CronValue, error) {
+	cv := &CronValue{
+		name:  name,
+		value: value,
+		min:   min,
+		max:   max,
+	}
+	err := cv.parse()
+	if err != nil {
+		return nil, fmt.Errorf("%s parsing failed: %w", cv.name, err)
+	}
+
+	return cv, nil
 }
 
 func (c CronValue) String() string {
@@ -61,7 +75,7 @@ func (c *CronValue) parse() error {
 		default:
 			v, err := strconv.ParseInt(cronTimer, 10, 64)
 			if err != nil {
-				return errors.Wrap(err, "single value parse failed")
+				return fmt.Errorf("single value parse failed: %w", err)
 			}
 
 			if err = existence.ApplyNumber(v); err != nil {

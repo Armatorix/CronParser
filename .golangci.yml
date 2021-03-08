@@ -1,19 +1,16 @@
 issues:
-  # List all of them
   max-issues-per-linter: 0
   max-same-issues: 0
-
-issues:
   exclude-rules:
     - text: "Function 'Test"
-      linters: 
+      linters:
         - funlen
     - path: pkg/cron/cron_test.go
       linters:
         - lll
     - text: "type name will be used as cron.CronValue"
       path: pkg/cron/cronvalue.go
-      linters: 
+      linters:
         - golint
     - text: "mnd: Magic number:"
       path: pkg/cron/cron.go
@@ -34,7 +31,6 @@ linters:
     - rowserrcheck
     - stylecheck
     - gosec
-    - interfacer
     - unconvert
     - dupl
     - goconst
@@ -45,7 +41,6 @@ linters:
     - goimports
     - goheader
     - gci
-    - maligned
     - depguard
     - misspell
     - lll

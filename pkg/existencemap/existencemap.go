@@ -1,7 +1,8 @@
 package existencemap
 
 import (
-	"github.com/pkg/errors"
+	"errors"
+	"fmt"
 )
 
 var (
@@ -9,6 +10,7 @@ var (
 	errOutOfBound = errors.New("out of bound")
 )
 
+// ExistenceMap provides mechanisms for handling ints exisntace in sets.
 type ExistenceMap struct {
 	existence []bool
 	min       int64
@@ -32,7 +34,7 @@ func New(min, max int64) (*ExistenceMap, error) {
 // returns error if value is out of bound.
 func (e *ExistenceMap) ApplyNumber(v int64) error {
 	if v < e.min || v > e.max {
-		return errors.WithMessagef(errOutOfBound, "min: %d, max: %d, value: %d", e.min, e.max, v)
+		return fmt.Errorf("%w: min: %d, max: %d, value: %d", errOutOfBound, e.min, e.max, v)
 	}
 	e.existence[int(v-e.min)] = true
 	return nil
@@ -53,7 +55,7 @@ func (e *ExistenceMap) ApplySlice(vals []int64) error {
 // returns error if any value is out of bound.
 func (e *ExistenceMap) ApplyRange(min, max int64) error {
 	if min < e.min || max > e.max {
-		return errors.WithMessagef(errOutOfBound, "existence %d-%d, applied %d-%d", e.min, e.max, min, max)
+		return fmt.Errorf("%w: existence %d-%d, applied %d-%d", errOutOfBound, e.min, e.max, min, max)
 	}
 	for v := min; v <= max; v++ {
 		e.existence[v-e.min] = true
@@ -66,6 +68,8 @@ func (e *ExistenceMap) AllExists() {
 	}
 }
 
+// ToInt64Slice provides slice of int64
+// based on the bool map and min value offset.
 func (e ExistenceMap) ToInt64Slice() []int64 {
 	s := make([]int64, 0, int(e.max-e.min+1))
 	for i, v := range e.existence {

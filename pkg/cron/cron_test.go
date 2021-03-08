@@ -24,9 +24,29 @@ func TestNewFromOsArgsCornerCases(t *testing.T) {
 			osArgs:       []string{"cmdName", "1 2 3 4"},
 		},
 		{
-			name:         "bad arguments",
+			name:         "bad arguments: minute",
+			errSubstring: "minute parsing failed",
+			osArgs:       []string{"cmdName", "min 2 3 4 5 cmd"},
+		},
+		{
+			name:         "bad arguments: hour",
+			errSubstring: "hour parsing failed",
+			osArgs:       []string{"cmdName", "1 hour 3 4 5 cmd"},
+		},
+		{
+			name:         "bad arguments: day of month",
+			errSubstring: "day of month parsing failed",
+			osArgs:       []string{"cmdName", "1 2 day 4 5 cmd"},
+		},
+		{
+			name:         "bad arguments: month",
+			errSubstring: "month parsing failed",
+			osArgs:       []string{"cmdName", "1 2 3 month 5 cmd"},
+		},
+		{
+			name:         "bad arguments: day of week",
 			errSubstring: "day of week parsing failed",
-			osArgs:       []string{"cmdName", "1 2 3 4 test cmd"},
+			osArgs:       []string{"cmdName", "1 2 3 4 day cmd"},
 		},
 	}
 

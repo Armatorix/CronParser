@@ -1,10 +1,10 @@
 package parser
 
 import (
+	"errors"
+	"fmt"
 	"strconv"
 	"strings"
-
-	"github.com/pkg/errors"
 )
 
 var (
@@ -23,16 +23,16 @@ func ParseRange(s string) (min int64, max int64, err error) {
 	}
 	min, err = strconv.ParseInt(rangeLimits[0], 10, 64)
 	if err != nil {
-		return 0, 0, errors.WithMessage(err, "parse min value")
+		return 0, 0, fmt.Errorf("parse min value: %w", err)
 	}
 
 	max, err = strconv.ParseInt(rangeLimits[1], 10, 64)
 	if err != nil {
-		return 0, 0, errors.WithMessage(err, "parse min value")
+		return 0, 0, fmt.Errorf("parse max value: %w", err)
 	}
 
 	if min > max {
-		return min, max, errors.WithMessagef(errMinGTMax, "min: %d, max: %d", min, max)
+		return min, max, fmt.Errorf("%w: min: %d, max: %d", errMinGTMax, min, max)
 	}
 	return min, max, nil
 }
@@ -46,11 +46,11 @@ func ParseStep(s string, min, max int64) ([]int64, error) {
 		return nil, errWrongFormat
 	}
 	if len(s) == 2 {
-		return nil, errors.WithMessage(errWrongFormat, "missing step")
+		return nil, fmt.Errorf("%w: missing step", errWrongFormat)
 	}
 	step, err := strconv.ParseInt(s[2:], 10, 64)
 	if err != nil {
-		return nil, errors.WithMessage(err, "parse step value")
+		return nil, fmt.Errorf("%w: parse step value", err)
 	}
 	if max-min < step {
 		return nil, errStepTooBig
